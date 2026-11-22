@@ -119,7 +119,7 @@ test('text colours meet WCAG AA contrast (4.5:1)', () => {
   const pairs = [
     ['ink', 'white'], ['ink', 'paper'], ['slate-deep', 'white'], ['slate-deep', 'paper'], ['slate-deep', 'slate-tint'],
     ['orange-deep', 'white'], ['orange-deep', 'paper'], ['orange-deep', 'slate-tint'],
-    ['ink', 'orange'],            // button text
+    ['ink', 'orange'], ['ink', 'orange-pressed'], ['ink', 'orange-hover'],   // button text: rest / pressed / hover
     ['orange', 'ink'],            // orange on the dark hero
     ['white', 'slate-band'], ['on-dark-muted', 'slate-band'], ['on-dark-muted', 'ink'], ['orange-on-slate', 'slate-band'],
   ];
