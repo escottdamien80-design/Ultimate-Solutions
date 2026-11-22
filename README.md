@@ -108,8 +108,9 @@ Darker/lighter shades are defined in `assets/css/styles.css` and tuned so all te
 ```bash
 npm install                      # once; installs Playwright (tests only, not part of the site)
 npx playwright install chromium  # once; downloads the test browser
-npm test                         # 33 checks
+npm test                         # 48 checks (site + hover/press/reduced-motion)
 npm run screenshots              # phone/tablet/desktop pictures into tests/screenshots/
+node tests/interaction-screenshots.cjs   # rest vs hover vs pressed pictures
 ```
 
 The tests cover: noindex, click-to-call links, no horizontal scrolling from 320px to 1440px, no external requests, page weight, broken links, image alt text, colour contrast, the mobile menu, and the quote form (validation, UK postcodes, photo limits, honest "not connected" message, successful send, server errors).
@@ -124,3 +125,11 @@ When you're happy with the site:
 4. Add a **canonical URL**, social share tags and `LocalBusiness` structured data once the final address is known.
 5. Add the site to **Google Business Profile** and Google Search Console, and submit a sitemap.
 6. Don't add a `robots.txt` that blocks everything while you're still on `noindex`; it can stop search engines from ever seeing the noindex tag.
+
+## Hover and press effects
+
+All in the "Interaction polish" block at the end of `assets/css/styles.css`.
+
+- Hover effects only run on devices with a real mouse or trackpad, so phones never get a "stuck" hover after a tap. Touch gets a clean pressed (`:active`) state instead.
+- With "reduce motion" switched on in the visitor's device settings, the pulse, lifting, zooming and icon nudge are all turned off. Colour and shadow feedback stays.
+- The call-button pulse is one ring every 5 seconds. To remove it, delete the `callPulse` animation line.
