@@ -108,9 +108,10 @@ Darker/lighter shades are defined in `assets/css/styles.css` and tuned so all te
 ```bash
 npm install                      # once; installs Playwright (tests only, not part of the site)
 npx playwright install chromium  # once; downloads the test browser
-npm test                         # 48 checks (site + hover/press/reduced-motion)
+npm test                         # 70 checks (site, hover/press/reduced-motion, logo animation)
 npm run screenshots              # phone/tablet/desktop pictures into tests/screenshots/
 node tests/interaction-screenshots.cjs   # rest vs hover vs pressed pictures
+node tests/scene-screenshots.cjs         # logo animation at several scroll positions
 ```
 
 The tests cover: noindex, click-to-call links, no horizontal scrolling from 320px to 1440px, no external requests, page weight, broken links, image alt text, colour contrast, the mobile menu, and the quote form (validation, UK postcodes, photo limits, honest "not connected" message, successful send, server errors).
@@ -133,3 +134,13 @@ All in the "Interaction polish" block at the end of `assets/css/styles.css`.
 - Hover effects only run on devices with a real mouse or trackpad, so phones never get a "stuck" hover after a tap. Touch gets a clean pressed (`:active`) state instead.
 - With "reduce motion" switched on in the visitor's device settings, the pulse, lifting, zooming and icon nudge are all turned off. Colour and shadow feedback stays.
 - The call-button pulse is one ring every 5 seconds. To remove it, delete the `callPulse` animation line.
+
+## Logo animation
+
+The first thing on the page is a scroll-driven logo assembly. As you scroll, the striped "U" pieces (blue-grey, orange, black bowl, two stripes and the blue swoosh) fly in from different edges, rotate slightly and lock into the house; then "ULTIMATE SOLUTIONS" fades in. Scrolling back up plays it in reverse.
+
+- **Files:** the pieces are inline in `index.html` (between the `LOGO-SCENE` markers, generated from the same PDF shapes as the logo by `tools/build_logo_scene.py`), the styles are the "Logo scene" block at the end of `assets/css/styles.css`, and the behaviour is `assets/js/logo-scene.js`.
+- **Tuning:** open `tools/build_logo_scene.py` and edit the `PIECES` / `TEXT` table (which side each piece comes from, how far it rotates, when it starts and how long it takes), then run `npm run logo-scene`. To make the animation take more or less scrolling, change `--runway` (110% of the screen height, 90% on phones) in `assets/css/styles.css`.
+- **Reduced motion:** visitors who ask their device for reduced motion (and anyone without JavaScript) just see a calm banner with the finished logo. No pinning, no movement.
+- **Performance:** only `transform` and `opacity` are animated, scroll listeners are passive, and all updates are batched into one animation frame.
+- **Header logo link:** the logo in the header now takes you to the very top, where the animation starts. The hero section's anchor is now `#hero`.

@@ -499,3 +499,46 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
   .nav a::after { transform: scaleX(0); }
   .nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); }
 }
+
+/* ==========================================================================
+   Logo scene (scroll-driven logo assembly)
+   Default / reduced motion / no JavaScript: a calm banner with the FINISHED logo.
+   The pinned, scrubbed version only applies when html has .scene-anim AND the
+   visitor has not asked for reduced motion. assets/js/logo-scene.js drives it.
+   ========================================================================== */
+.logo-scene {
+  --stage-h: calc(100vh - var(--header-h));
+  --runway: 110vh;                         /* how much scrolling the animation takes */
+}
+@supports (height: 100svh) {
+  .logo-scene { --stage-h: calc(100svh - var(--header-h)); --runway: 110svh; }
+}
+@media (max-width: 639px) { .logo-scene { --runway: 90vh; } }
+@media (max-width: 639px) { @supports (height: 100svh) { .logo-scene { --runway: 90svh; } } }
+
+.logo-stage {
+  position: relative; display: grid; place-items: center;
+  padding: clamp(2rem, 6vw, 4rem) var(--gutter);
+  background: radial-gradient(ellipse 80% 75% at 50% 45%, var(--white) 0%, var(--paper) 62%, #eceff1 100%);
+}
+.logo-box { position: relative; width: min(100%, 34rem); aspect-ratio: 1158.42 / 477.27; }
+/* Every piece is a full-size layer with the same viewBox, so with no transform they
+   line up exactly into the finished logo. */
+.piece { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+.scene-cue { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene-anim .logo-scene { height: calc(var(--stage-h) + var(--runway)); }
+  .scene-anim .logo-stage {
+    position: sticky; top: var(--header-h); height: var(--stage-h);
+    padding: 0 .75rem; overflow: hidden; contain: paint;
+  }
+  .scene-anim .logo-box { width: min(100%, 62rem, calc(var(--stage-h) * 1.45)); }
+  /* Starting state (script then scrubs these with transform + opacity only) */
+  .scene-anim .piece { opacity: 0; will-change: transform, opacity; backface-visibility: hidden; }
+  .scene-anim .piece--house { opacity: .25; }
+  .scene-anim .scene-cue {
+    display: block; position: absolute; left: 50%; bottom: 1.5rem; width: 1px; height: 2.75rem;
+    background: linear-gradient(var(--slate), transparent); transform: translateX(-50%);
+  }
+}

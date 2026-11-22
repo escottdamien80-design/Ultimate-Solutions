@@ -20,6 +20,8 @@ const out = path.resolve(process.argv[2] || path.join(__dirname, 'screenshots'))
   // ----- desktop (mouse) -----
   let ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, reducedMotion: 'no-preference' });
   let page = await ctx.newPage(); await page.goto(url + '/index.html');
+  // the hero sits below the logo animation, so bring it into view first
+  await page.evaluate(() => document.querySelector('.hero-cta').scrollIntoView({ block: 'center', behavior: 'instant' }));
 
   // pulse ring caught mid-animation (starts after 1.5s, peaks early in the cycle)
   await page.waitForTimeout(1750);

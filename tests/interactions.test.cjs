@@ -162,6 +162,7 @@ test('pressing shows a clean pressed state on touch (button, card, gallery, nav)
   const { ctx, page } = await open(TOUCH);
   // button: scales down + darker orange
   const b = '.hero-cta .btn--primary';
+  await page.locator(b).scrollIntoViewIfNeeded();       // the hero sits below the logo scene
   const rest = await style(page, b, 'backgroundColor');
   const box = await page.locator(b).boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + 10); await page.mouse.down(); await page.waitForTimeout(300);
@@ -188,7 +189,9 @@ test('pressing shows a clean pressed state on touch (button, card, gallery, nav)
 
 test('pressed state also works with a mouse (button click-down)', async () => {
   const { ctx, page } = await open(DESKTOP);
-  const sel = '.hero-cta .btn--primary'; const box = await page.locator(sel).boundingBox();
+  const sel = '.hero-cta .btn--primary';
+  await page.locator(sel).scrollIntoViewIfNeeded();
+  const box = await page.locator(sel).boundingBox();
   await page.mouse.move(box.x + 20, box.y + 10); await page.mouse.down(); await page.waitForTimeout(300);
   assert.ok((await tf(page, sel)).sx < 1);
   await page.mouse.up(); await ctx.close();
