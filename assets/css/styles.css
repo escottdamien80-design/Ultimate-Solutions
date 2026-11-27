@@ -177,24 +177,16 @@ h3 { font-size: 1.25rem; letter-spacing: -.01em; line-height: 1.25; }
 }
 .hero-grid { position: relative; display: grid; gap: 2.5rem; }
 
-/* Holographic logo: the logo shape is used as a mask over a shifting iridescent gradient + scan lines */
-.hero-holo {
-  position: relative; width: min(100%, 340px); aspect-ratio: 1158.42 / 477.27; margin-bottom: 2rem;
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, .22) 0 1px, transparent 1px 4px),
-    linear-gradient(110deg, #7fe7ff 0%, #ffffff 22%, #f36020 40%, #c9a7ff 58%, #7fe7ff 76%, #ffffff 100%);
-  background-size: 100% 100%, 300% 100%;
-  -webkit-mask: url("../logo/logo-main-reversed.svg") center / contain no-repeat;
-          mask: url("../logo/logo-main-reversed.svg") center / contain no-repeat;
-  filter: drop-shadow(0 0 6px rgba(127, 231, 255, .55)) drop-shadow(0 0 18px rgba(243, 96, 32, .35));
-  opacity: .92;
+/* The "U" mark from the logo, large and faded behind the headline */
+.hero-bg-logo {
+  position: absolute; z-index: 0; pointer-events: none;
+  width: min(95vw, 520px); aspect-ratio: 462 / 350;
+  left: -4%; top: 4%;
+  background: url("../logo/logo-mark-hero.svg") center / contain no-repeat;
+  opacity: .13;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .hero-holo { animation: holo-shift 7s linear infinite, holo-flicker 5s steps(1) infinite; }
-}
-@keyframes holo-shift { from { background-position: 0 0, 0% 0; } to { background-position: 0 8px, 300% 0; } }
-@keyframes holo-flicker { 0%, 100% { opacity: .92; } 47% { opacity: .78; } 48% { opacity: .95; } 72% { opacity: .85; } }
-@media (min-width: 960px) { .hero-holo { width: 380px; margin-bottom: 2.5rem; } }
+.hero-grid { z-index: 1; }
+@media (min-width: 960px) { .hero-bg-logo { width: 720px; left: 2%; top: 50%; transform: translateY(-50%); opacity: .12; } }
 .hero h1 em { font-style: normal; color: var(--orange); white-space: nowrap; }
 .hero .lead { margin-top: 1.25rem; color: var(--on-dark-muted); font-size: 1.15rem; }
 .hero-cta { display: grid; gap: .75rem; margin-top: 2rem; }
