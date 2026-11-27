@@ -572,3 +572,19 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
   0%   { opacity: .8; transform: scale(1); }
   100% { opacity: 0;  transform: scale(1.04, 1.07); }
 }
+
+/* ---------- WhatsApp ---------- */
+.contact-list .badge-icon--whatsapp, .social-links .social-whatsapp { background: #25d366; color: #fff; border-color: transparent; }
+.social-links a.social-whatsapp:hover { color: #fff; filter: brightness(1.08); }
+.wa-float {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 90;
+  width: 3.5rem; height: 3.5rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #25d366; color: #fff;
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, .45);
+  transition: transform .2s ease, filter .2s ease;
+}
+.wa-float .icon { width: 1.7rem; height: 1.7rem; }
+.wa-float:hover { transform: translateY(-2px); filter: brightness(1.06); color: #fff; }
+.wa-float:focus-visible { outline: 3px solid var(--white); outline-offset: 3px; }
+@media print { .wa-float { display: none; } }

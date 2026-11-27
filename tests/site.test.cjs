@@ -75,7 +75,7 @@ test('no external requests in the HTML (fast, private, works offline)', () => {
   const external = [...html.matchAll(/(?:src|href)="(https?:)?\/\/[^"]+"/g)].map((m) => m[0])
     .filter((x) => !/form-endpoint-not-set\.invalid/.test(x))
     // social profile links are plain outbound links, not resources the page loads
-    .filter((x) => !/^href="https:\/\/www\.(instagram|facebook)\.com\//.test(x));
+    .filter((x) => !/^href="https:\/\/www\.(instagram|facebook)\.com\//.test(x) && !/^href=\"https:\/\/wa\.me\/447702782875/.test(x));
   assert.deepEqual(external, []);
 });
 
