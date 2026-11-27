@@ -176,6 +176,25 @@ h3 { font-size: 1.25rem; letter-spacing: -.01em; line-height: 1.25; }
     linear-gradient(118deg, transparent 0 79%, rgba(243, 96, 32, .9) 79% 79.6%, transparent 79.6%);
 }
 .hero-grid { position: relative; display: grid; gap: 2.5rem; }
+
+/* Holographic logo: the logo shape is used as a mask over a shifting iridescent gradient + scan lines */
+.hero-holo {
+  position: relative; width: min(100%, 340px); aspect-ratio: 1158.42 / 477.27; margin-bottom: 2rem;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .22) 0 1px, transparent 1px 4px),
+    linear-gradient(110deg, #7fe7ff 0%, #ffffff 22%, #f36020 40%, #c9a7ff 58%, #7fe7ff 76%, #ffffff 100%);
+  background-size: 100% 100%, 300% 100%;
+  -webkit-mask: url("../logo/logo-main-reversed.svg") center / contain no-repeat;
+          mask: url("../logo/logo-main-reversed.svg") center / contain no-repeat;
+  filter: drop-shadow(0 0 6px rgba(127, 231, 255, .55)) drop-shadow(0 0 18px rgba(243, 96, 32, .35));
+  opacity: .92;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-holo { animation: holo-shift 7s linear infinite, holo-flicker 5s steps(1) infinite; }
+}
+@keyframes holo-shift { from { background-position: 0 0, 0% 0; } to { background-position: 0 8px, 300% 0; } }
+@keyframes holo-flicker { 0%, 100% { opacity: .92; } 47% { opacity: .78; } 48% { opacity: .95; } 72% { opacity: .85; } }
+@media (min-width: 960px) { .hero-holo { width: 380px; margin-bottom: 2.5rem; } }
 .hero h1 em { font-style: normal; color: var(--orange); white-space: nowrap; }
 .hero .lead { margin-top: 1.25rem; color: var(--on-dark-muted); font-size: 1.15rem; }
 .hero-cta { display: grid; gap: .75rem; margin-top: 2rem; }
@@ -288,8 +307,15 @@ h3 { font-size: 1.25rem; letter-spacing: -.01em; line-height: 1.25; }
 
 /* ---------- Area ---------- */
 .area-grid { display: grid; gap: 2rem; align-items: start; }
-.towns { display: flex; flex-wrap: wrap; gap: .5rem; }
-.towns li { padding: .4rem .9rem; border-radius: 99px; background: var(--white); border: 1px solid var(--line); font-weight: 600; font-size: .95rem; }
+.area-map { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); }
+.area-map svg { display: block; width: 100%; height: auto; }
+.area-map__reach { fill: rgba(243, 96, 32, .08); stroke: rgba(243, 96, 32, .45); stroke-width: 1.5; stroke-dasharray: 6 6; }
+.area-map__county { fill: var(--slate-tint); stroke: var(--navy); stroke-width: 2; stroke-linejoin: round; }
+.area-map__pulse { fill: rgba(243, 96, 32, .25); }
+.area-map__pin { fill: var(--orange); stroke: #fff; stroke-width: 2; }
+.area-map__label { font-weight: 800; font-size: 20px; fill: var(--ink); }
+.area-map__county-name { font-weight: 700; font-size: 13px; letter-spacing: .3em; fill: var(--slate-deep); }
+.area-map figcaption { margin-top: .75rem; font-size: .95rem; color: var(--slate-deep); text-align: center; }
 .area-note { margin-top: 1.25rem; color: var(--slate-deep); }
 .area-note a { font-weight: 700; color: var(--orange-deep); }
 @media (min-width: 860px) { .area-grid { grid-template-columns: .9fr 1.1fr; gap: 4rem; } }
@@ -507,4 +533,50 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
   .nav a::after, .gallery figure::after { transition: none !important; }
   .nav a::after { transform: scaleX(0); }
   .nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); }
+}
+
+/* ==========================================================================
+   Spreading outline rings (same idea as the pulse on the call buttons)
+   - .btn--ghost, the quote submit button and the social icons pulse now and then
+   - the Design/Supply/Installation card glows on a slow loop
+   - cards, tiles and icon badges send out one ring when hovered
+   ========================================================================== */
+.btn--ghost, .btn--block, .social-links a, .badge-icon { position: relative; }
+.btn--ghost::after, .btn--block::after, .social-links a::after {
+  content: ""; position: absolute; inset: -2px; border-radius: inherit; pointer-events: none;
+  border: 2px solid var(--orange); opacity: 0;
+}
+.btn--ghost::after { border-color: rgba(255, 255, 255, .8); }
+@media (prefers-reduced-motion: no-preference) {
+  .btn--ghost::after { animation: callPulse 5s var(--ease) 3s infinite; }
+  .btn--block::after { animation: callPulse 5s var(--ease) 2s infinite; }
+  .social-links a::after { animation: ringPulse 5s var(--ease) 1s infinite; }
+  .social-links li + li a::after { animation-delay: 1.6s; }
+  .trades-card { animation: cardGlow 6s ease-in-out infinite; }
+}
+@keyframes ringPulse {
+  0%   { opacity: .7; transform: scale(1); }
+  25%  { opacity: 0;  transform: scale(1.5); }
+  100% { opacity: 0;  transform: scale(1.5); }
+}
+@keyframes cardGlow {
+  0%, 100% { box-shadow: 0 18px 50px rgba(0, 0, 0, .35), 0 0 0 0 rgba(243, 96, 32, 0); }
+  50%      { box-shadow: 0 18px 50px rgba(0, 0, 0, .35), 0 0 0 6px rgba(243, 96, 32, .18), 0 0 40px rgba(243, 96, 32, .25); }
+}
+
+/* one ring spreads out from cards, tiles and icon badges on hover */
+.card, .why-card, .trade-tile { position: relative; }
+.service-card::before, .why-card::before, .trade-tile::before, .badge-icon::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
+  border: 2px solid var(--orange); opacity: 0;
+}
+.badge-icon::after { inset: -2px; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .service-card:hover::before, .why-card:hover::before, .trade-tile:hover::before { animation: edgeRing .9s var(--ease) both; }
+  .service-card:hover .badge-icon::after, .why-card:hover .badge-icon::after, .trade-tile:hover .badge-icon::after,
+  .contact-list li:hover .badge-icon::after, .trades-list li:hover .badge-icon::after { animation: ringPulse 1.4s var(--ease) both; }
+}
+@keyframes edgeRing {
+  0%   { opacity: .8; transform: scale(1); }
+  100% { opacity: 0;  transform: scale(1.04, 1.07); }
 }
