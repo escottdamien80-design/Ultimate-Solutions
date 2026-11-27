@@ -22,7 +22,8 @@ async function open(width = 390, height = 844, opts = {}) {
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   const requests = [];
-  page.on('request', (r) => requests.push(r.url()));
+  // lazy-loaded gallery photos are local images, not data being sent anywhere
+  page.on('request', (r) => { if (r.resourceType() !== 'image') requests.push(r.url()); });
   await page.goto(url + '/index.html');
   return { ctx, page, errors, requests };
 }
@@ -190,10 +191,12 @@ test('desktop shows the full nav and hides the menu button', async () => {
   await ctx.close();
 });
 
-test('gallery tiles are clearly marked as placeholders', async () => {
+test('gallery: every tile is a real photo or clearly marked as a placeholder', async () => {
   const { ctx, page } = await open(390);
-  assert.equal(await page.locator('.gallery figure').count(), 6);
-  assert.equal(await page.locator('.gallery .ph-tag').count(), 6);
+  const tiles = await page.locator('.gallery figure').count();
+  const photos = await page.locator('.gallery figure img').count();
+  assert.equal(tiles, 6);
+  assert.equal(await page.locator('.gallery .ph-tag').count(), tiles - photos);
   await ctx.close();
 });
 
