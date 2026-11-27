@@ -99,8 +99,8 @@ test('gallery tile: image zooms inside its frame and a darkening overlay appears
   assert.equal(await style(page, fig, 'opacity', '::after'), '1');
   assert.equal(await style(page, fig, 'overflow'), 'hidden', 'zoom must stay inside the frame');
   // placeholder tiles behave the same
-  await page.hover('.gallery figure:nth-child(2)'); await settle(page, 1200);
-  assert.ok((await tf(page, '.gallery figure:nth-child(2) .ph')).sx > 1.03);
+  await page.hover('.gallery figure:nth-child(3)'); await settle(page, 1200);
+  assert.ok((await tf(page, '.gallery figure:nth-child(3) .ph')).sx > 1.03);
   await ctx.close();
 });
 
@@ -180,7 +180,7 @@ test('pressing shows a clean pressed state on touch (button, card, gallery, nav)
   const g = '.gallery figure:first-child'; await page.locator(g).scrollIntoViewIfNeeded();
   const gb = await page.locator(g).boundingBox();
   await page.mouse.move(gb.x + 30, gb.y + 30); await page.mouse.down(); await page.waitForTimeout(500);
-  assert.ok((await tf(page, g + ' .ph')).sx > 1.01);
+  assert.ok((await tf(page, g + ' :is(img, .ph)')).sx > 1.01);
   assert.equal(await style(page, g, 'opacity', '::after'), '1');
   await page.mouse.up();
   await ctx.close();
@@ -210,7 +210,7 @@ test('prefers-reduced-motion: no pulse, lift, zoom or nudge (colour/shadow feedb
   assert.notEqual(await style(page, '.service-card', 'borderTopColor'), 'rgb(225, 223, 218)', 'border highlight kept');
   await page.locator('.gallery figure').first().scrollIntoViewIfNeeded();
   await page.hover('.gallery figure:first-child'); await settle(page, 400);
-  assert.equal((await tf(page, '.gallery figure:first-child .ph')).sx, 1, 'no zoom');
+  assert.equal((await tf(page, '.gallery figure:first-child :is(img, .ph)')).sx, 1, 'no zoom');
   await ctx.close();
 });
 
