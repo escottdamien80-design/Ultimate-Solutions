@@ -67,7 +67,7 @@
     if (!v('postcode')) problems.push(['q-postcode', 'Please enter your postcode.']);
     else if (!UK_POSTCODE.test(v('postcode'))) problems.push(['q-postcode', 'Please enter a full UK postcode, e.g. CW1 2AB.']);
 
-    if (!form.querySelector('input[name="project"]:checked')) problems.push(['q-type', 'Please choose kitchen, bathroom or both.']);
+    if (!form.querySelector('input[name="project"]:checked')) problems.push(['q-type', 'Please choose bathroom, wet room, kitchen or both.']);
 
     var files = Array.prototype.slice.call(photos.files || []);
     if (files.length > MAX_FILES) problems.push(['q-photos', 'Please choose no more than ' + MAX_FILES + ' photos.']);

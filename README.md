@@ -1,6 +1,6 @@
 # Ultimate Solutions website
 
-One-page website for **Ultimate Solutions**, kitchen and bathroom fitters covering Cheshire and surrounding areas.
+One-page website for **Ultimate Solutions**, bathroom, wet room and kitchen fitters covering Cheshire and surrounding areas.
 Plain HTML, CSS and JavaScript. No frameworks, no build step, no external requests.
 
 > **Status: private preview.** The site is set to `noindex`, so search engines are asked to ignore it until you say it's ready (see [Going live](#going-live)).

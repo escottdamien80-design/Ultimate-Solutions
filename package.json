@@ -2,7 +2,7 @@
   "name": "ultimate-solutions-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Static website for Ultimate Solutions, kitchen and bathroom fitters in Cheshire. The site itself has no dependencies; Playwright is only used for tests and screenshots.",
+  "description": "Static website for Ultimate Solutions, bathroom, wet room and kitchen fitters in Cheshire. The site itself has no dependencies; Playwright is only used for tests and screenshots.",
   "scripts": {
     "test": "node --test tests/site.test.cjs tests/interactions.test.cjs",
     "screenshots": "node tests/screenshots.cjs",

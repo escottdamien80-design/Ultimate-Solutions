@@ -72,7 +72,9 @@ test('required sections exist, in a sensible order', () => {
 
 test('no external requests in the HTML (fast, private, works offline)', () => {
   const external = [...html.matchAll(/(?:src|href)="(https?:)?\/\/[^"]+"/g)].map((m) => m[0])
-    .filter((x) => !/form-endpoint-not-set\.invalid/.test(x));
+    .filter((x) => !/form-endpoint-not-set\.invalid/.test(x))
+    // social profile links are plain outbound links, not resources the page loads
+    .filter((x) => !/^href="https:\/\/www\.(instagram|facebook)\.com\//.test(x));
   assert.deepEqual(external, []);
 });
 
