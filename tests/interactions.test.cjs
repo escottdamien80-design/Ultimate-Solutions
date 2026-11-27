@@ -99,8 +99,8 @@ test('gallery tile: image zooms inside its frame and a darkening overlay appears
   assert.equal(await style(page, fig, 'opacity', '::after'), '1');
   assert.equal(await style(page, fig, 'overflow'), 'hidden', 'zoom must stay inside the frame');
   // placeholder tiles behave the same
-  await page.hover('.gallery figure:nth-child(3)'); await settle(page, 1200);
-  assert.ok((await tf(page, '.gallery figure:nth-child(3) .ph')).sx > 1.03);
+  await page.hover('.gallery figure:nth-child(6)'); await settle(page, 1200);
+  assert.ok((await tf(page, '.gallery figure:nth-child(6) .ph')).sx > 1.03);
   await ctx.close();
 });
 
