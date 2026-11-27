@@ -79,28 +79,15 @@ test('"why choose us" cards rise with a border highlight', async () => {
   await ctx.close();
 });
 
-test('gallery tile: image zooms inside its frame and a darkening overlay appears', async () => {
+test('gallery project: photo zooms gently inside its frame on hover', async () => {
   const { ctx, page } = await open(DESKTOP);
-  // also prove it works for a REAL <img>, which is what the tiles will hold later
-  await page.evaluate(() => {
-    const ph = document.querySelector('.gallery figure .ph');
-    const img = document.createElement('img');
-    img.alt = 'test'; img.width = 1200; img.height = 900;
-    img.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900"><rect width="1200" height="900" fill="#789"/></svg>');
-    ph.replaceWith(img);
-  });
   const fig = '.gallery figure:first-child';
   await page.locator(fig).scrollIntoViewIfNeeded();
   assert.equal((await tf(page, fig + ' img')).sx, 1);
-  assert.equal(await style(page, fig, 'opacity', '::after'), '0');
-  await page.hover(fig); await settle(page, 1200);
+  await page.hover(fig); await settle(page, 2000);
   const z = await tf(page, fig + ' img');
-  assert.ok(z.sx > 1.03 && z.sx < 1.12, `zoom should be slight, got ${z.sx}`);
-  assert.equal(await style(page, fig, 'opacity', '::after'), '1');
+  assert.ok(z.sx > 1.01 && z.sx < 1.06, `zoom should be slight, got ${z.sx}`);
   assert.equal(await style(page, fig, 'overflow'), 'hidden', 'zoom must stay inside the frame');
-  // placeholder tiles behave the same
-  await page.hover('.gallery figure:nth-child(6)'); await settle(page, 1200);
-  assert.ok((await tf(page, '.gallery figure:nth-child(6) .ph')).sx > 1.03);
   await ctx.close();
 });
 
@@ -158,7 +145,7 @@ test('tapping a button on touch leaves NO sticky hover lift or glow', async () =
   await ctx.close();
 });
 
-test('pressing shows a clean pressed state on touch (button, card, gallery, nav)', async () => {
+test('pressing shows a clean pressed state on touch (button, card, nav)', async () => {
   const { ctx, page } = await open(TOUCH);
   // button: scales down + darker orange
   const b = '.hero-cta .btn--primary';
@@ -175,13 +162,6 @@ test('pressing shows a clean pressed state on touch (button, card, gallery, nav)
   await page.mouse.move(cb.x + 20, cb.y + 20); await page.mouse.down(); await page.waitForTimeout(500);
   assert.notEqual(await style(page, c, 'borderTopColor'), bc);
   assert.equal((await tf(page, c)).ty, 0);
-  await page.mouse.up();
-  // gallery tile: press zoom + overlay
-  const g = '.gallery figure:first-child'; await page.locator(g).scrollIntoViewIfNeeded();
-  const gb = await page.locator(g).boundingBox();
-  await page.mouse.move(gb.x + 30, gb.y + 30); await page.mouse.down(); await page.waitForTimeout(500);
-  assert.ok((await tf(page, g + ' :is(img, .ph)')).sx > 1.01);
-  assert.equal(await style(page, g, 'opacity', '::after'), '1');
   await page.mouse.up();
   await ctx.close();
 });
