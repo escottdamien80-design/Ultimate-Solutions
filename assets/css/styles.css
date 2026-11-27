@@ -273,28 +273,26 @@ h3 { font-size: 1.25rem; letter-spacing: -.01em; line-height: 1.25; }
 @media (min-width: 640px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
 
-/* ---------- Gallery ---------- */
-.gallery { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
-.gallery figure { position: relative; overflow: hidden; border-radius: var(--radius-sm); background: var(--white); border: 1px solid var(--line); }
-.gallery img { display: block; width: 100%; height: auto; object-fit: cover; aspect-ratio: 4 / 3; }
-.ph { /* PLACEHOLDER tile - delete the .ph div and drop in an <img> when you have real photos */
-  display: grid; place-content: center; justify-items: center; gap: .4rem; text-align: center;
-  aspect-ratio: 4 / 3; padding: 1rem; color: var(--slate-deep);
-  background:
-    linear-gradient(135deg, transparent 0 46%, rgba(115, 138, 153, .18) 46% 54%, transparent 54%),
-    var(--slate-tint);
+/* ---------- Gallery: full-width projects, photos never cropped ---------- */
+.gallery { display: grid; gap: 2.5rem; }
+.project { position: relative; margin: 0; overflow: hidden; border-radius: var(--radius-sm); background: var(--ink); }
+.project img { display: block; width: 100%; height: auto; }   /* natural 4:3, no cropping */
+.project figcaption { padding: 1.25rem 1.25rem 1.5rem; background: var(--ink); color: var(--white); }
+.project-place {
+  display: block; font-size: .72rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--orange);
 }
-.ph .icon { width: 2.25rem; height: 2.25rem; color: var(--slate); }
-.ph strong { font-size: .9rem; color: var(--ink-soft); }
-.ph small { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
-.ph-tag {
-  position: absolute; left: .6rem; top: .6rem; padding: .2rem .55rem; border-radius: 99px;
-  background: var(--ink); color: var(--white); font-size: .65rem; font-weight: 700; letter-spacing: .12em;
+.project h3 {
+  margin-top: .5rem; font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-weight: 400; font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.1; letter-spacing: -.01em; color: var(--white);
 }
-.gallery figcaption { padding: .6rem .8rem; font-size: .9rem; color: var(--slate-deep); background: var(--white); }
-.gallery-note { margin-top: 1.25rem; font-size: .95rem; color: var(--slate-deep); }
+.project p { margin-top: .6rem; max-width: 34rem; line-height: 1.6; color: rgba(255, 255, 255, .82); }
+.gallery-note { margin-top: 2rem; font-size: .95rem; color: var(--slate-deep); }
 @media (min-width: 720px) {
-  .gallery { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .gallery { gap: 3.5rem; }
+  .project figcaption {             /* text sits over the photo on bigger screens */
+    position: absolute; inset: auto 0 0 0; padding: 6rem 2.5rem 2.25rem;
+    background: linear-gradient(to top, rgba(20, 18, 19, .88) 0%, rgba(20, 18, 19, .55) 45%, rgba(20, 18, 19, 0) 100%);
+  }
 }
 
 /* ---------- Area ---------- */
@@ -438,15 +436,8 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
   transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s, background-color .3s;
 }
 
-/* ---------- Gallery tiles ---------- */
-.gallery figcaption { position: relative; z-index: 2; }
-.gallery .ph-tag { z-index: 3; }
-.gallery .ph, .gallery img { transition: transform .7s var(--ease); }
-.gallery figure::after {            /* gentle darkening over the image area only */
-  content: ""; position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 4 / 3; z-index: 1;
-  background: linear-gradient(to top, rgba(35, 31, 32, .4), rgba(35, 31, 32, .06));
-  opacity: 0; transition: opacity .4s ease; pointer-events: none;
-}
+/* ---------- Gallery projects ---------- */
+.gallery img { transition: transform 1.6s var(--ease); }
 
 /* ---------- Nav links ---------- */
 .nav a { position: relative; transition: color .2s, background-color .2s; }
@@ -481,8 +472,7 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
     box-shadow: 0 12px 28px -14px rgba(35, 31, 32, .3);
   }
 
-  .gallery figure:hover .ph, .gallery figure:hover img { transform: scale(1.06); }
-  .gallery figure:hover::after { opacity: 1; }
+  .gallery figure:hover img { transform: scale(1.03); }
 
   .nav a:hover { color: var(--orange-deep); }
   .nav a:hover::after { transform: scaleX(1); }
@@ -503,8 +493,6 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
 .why-card:active { border-color: rgba(255, 148, 102, .75); background: rgba(255, 255, 255, .12); }
 .trade-tile:active { border-color: rgba(243, 96, 32, .5); background: var(--white); }
 
-.gallery figure:active .ph, .gallery figure:active img { transform: scale(1.04); transition-duration: .2s; }
-.gallery figure:active::after { opacity: 1; transition-duration: .15s; }
 
 .nav a:active { color: var(--orange-deep); background: var(--slate-tint); }
 .nav-toggle:active { background: var(--slate-tint); transform: scale(.94); }
@@ -519,10 +507,9 @@ a, button, label { -webkit-tap-highlight-color: transparent; touch-action: manip
   .btn--primary[href^="tel:"]::after { animation: none !important; }
   .btn, .btn:hover, .btn:active, .btn svg, .btn:hover svg,
   .card:hover, .why-card:hover, .trade-tile:hover,
-  .gallery .ph, .gallery img, .gallery figure:hover .ph, .gallery figure:hover img,
-  .gallery figure:active .ph, .gallery figure:active img,
+  .gallery img, .gallery figure:hover img,
   .nav-toggle:active, .choice span:active { transform: none !important; }
-  .nav a::after, .gallery figure::after { transition: none !important; }
+  .nav a::after { transition: none !important; }
   .nav a::after { transform: scaleX(0); }
   .nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); }
 }

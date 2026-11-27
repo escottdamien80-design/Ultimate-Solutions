@@ -191,12 +191,18 @@ test('desktop shows the full nav and hides the menu button', async () => {
   await ctx.close();
 });
 
-test('gallery: every tile is a real photo or clearly marked as a placeholder', async () => {
+test('gallery: every project is a real photo, shown uncropped, with place, title and description', async () => {
   const { ctx, page } = await open(390);
-  const tiles = await page.locator('.gallery figure').count();
-  const photos = await page.locator('.gallery figure img').count();
-  assert.equal(tiles, 6);
-  assert.equal(await page.locator('.gallery .ph-tag').count(), tiles - photos);
+  const figs = page.locator('.gallery figure');
+  const n = await figs.count();
+  assert.equal(n, 4);
+  for (let i = 0; i < n; i++) {
+    const f = figs.nth(i);
+    assert.equal(await f.locator('img').count(), 1);
+    for (const sel of ['.project-place', 'h3', 'p']) assert.ok((await f.locator(sel).innerText()).trim().length > 0, `figure ${i + 1} missing ${sel}`);
+    const r = await f.locator('img').evaluate((im) => im.getBoundingClientRect().height / im.getBoundingClientRect().width);
+    assert.ok(Math.abs(r - 0.75) < 0.01, `photo ${i + 1} should keep its 4:3 shape, got ${r}`);
+  }
   await ctx.close();
 });
 
